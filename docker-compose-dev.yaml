@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  postgres_bd:
+    image: postgres
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=user-shortener
+      - POSTGRES_PASSWORD=shortener
+      - POSTGRES_DB=shortener
+    volumes:
+      - ./.docker/pgdata:/data/postgres
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres_bd
+  app:
+    build: .
+    container_name: node
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 3333:3333
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - postgres_bd
+    command: >
+      sh -c "sleep 15 &&
+      npx prisma migrate deploy &&
+      npm run populate:data &&
+      npm run start:prod"

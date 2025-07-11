@@ -1,0 +1,55 @@
+name: shortener-url-ci
+on: [pull_request]
+
+env:
+  DATABASE_URL: postgresql://user-shortener:shortener@localhost:5432/shortener?schema=public
+  JWT_SECRET: test-secret
+  JWT_EXPIRESIN: 1d
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        ports: [5432:5432]
+        env:
+          POSTGRES_USER: user-shortener
+          POSTGRES_PASSWORD: shortener
+          POSTGRES_DB: shortener
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup environment
+        run: |
+          echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "JWT_SECRET=${{ env.JWT_SECRET }}" >> $GITHUB_ENV
+          echo "JWT_EXPIRESIN=${{ env.JWT_EXPIRESIN }}" >> $GITHUB_ENV
+
+      - name: prisma generate
+        run: npx prisma generate
+
+      - name: Run migrations
+        run: npm run migrate:dev
+
+      - name: Run build
+        run: npm run build
+
+      - name: Run populate:data
+        run: npm run populate:data:dev
+
+      - name: Wait for DB (fallback)
+        run: sleep 5
+
+      - name: Run tests E2E
+        run: npm run test:e2e
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          JWT_SECRET: ${{ env.JWT_SECRET }}
+          JWT_EXPIRESIN: ${{ env.JWT_EXPIRESIN }}

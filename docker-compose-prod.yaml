@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  postgres_bd:
+    image: postgres
+    container_name: postgres
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - ./.docker/pgdata:/data/postgres
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - ${PGADMIN_DEFAULT_PORT}:80
+    depends_on:
+      - postgres_bd
+  app:
+    build: .
+    container_name: node
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - postgres_bd
+    command: >
+      sh -c "sleep 10 && 
+      npx prisma migrate deploy && 
+      npm run populate:data && 
+      npm run start:prod"
