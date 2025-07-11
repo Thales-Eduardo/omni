@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class RegisterDtos {
@@ -24,4 +28,13 @@ export class RegisterDtos {
   @IsString({ message: 'A senha deve ser string' })
   @MinLength(6)
   password: string;
+
+  @IsNotEmpty({ message: 'Necessário informar data de nascimento' })
+  @IsString({ message: 'A data deve ser string' })
+  @Transform(({ value }) => {
+    // Converte "DD/MM/YYYY" para "YYYY-MM-DD"
+    const [day, month, year] = value.split('/');
+    return `${year}-${month}-${day}`;
+  })
+  birthdate: string;
 }

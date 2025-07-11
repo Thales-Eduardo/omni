@@ -37,5 +37,4 @@ services:
     command: >
       sh -c "sleep 10 && 
       npx prisma migrate deploy && 
-      npm run populate:data && 
       npm run start:prod"

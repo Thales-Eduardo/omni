@@ -24,7 +24,9 @@
 
 ## Description
 
-Encurtador de URLs, para rodar o projeto.
+crie um arquivo .env
+
+caso queira rodar elastic-apm-node / apm vc deve passar as env do elastic-apm
 
 ```bash
 docker compose -f 'docker-compose-dev.yaml' up -d --build

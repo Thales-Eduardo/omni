@@ -13,8 +13,6 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "migrate:dev": "dotenv -e .env.example npx prisma migrate dev ",
-    "populate:data:dev": "dotenv -e .env.example node dist/service/populate-data-in-the-hash-table.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

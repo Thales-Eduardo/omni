@@ -1,16 +1,15 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as dotenv from 'dotenv';
+// import * as dotenv from 'dotenv';
 import * as elasticApm from 'elastic-apm-node';
 import helmet from 'helmet';
 import { AppModule } from './modules/app.module';
 
-dotenv.config({ path: '.env.example', override: true });
+// dotenv.config({ path: '.env.example', override: true });
 
 function apm(): void {
   if (process.env.APM_AVAILABLE === 'false') return;
-  console.log(`passei aqui`);
   elasticApm.start({
     serviceName: 'shortener-url',
     apiKey: process.env.API_KEY,

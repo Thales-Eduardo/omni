@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -18,11 +19,18 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @HttpCode(HttpStatus.CREATED)
-  @Post('register')
+  @Post('signup')
   async register(
     @Body(ValidationPipe) registerDtos: RegisterDtos,
-  ): Promise<void> {
-    await this.usersService.create(registerDtos);
+  ): Promise<any> {
+    const result = await this.usersService.create(registerDtos);
+    return { id: result };
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Get('')
+  async findAllUsers(): Promise<any> {
+    return await this.usersService.findAllUsers();
   }
 
   @HttpCode(HttpStatus.OK)

@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as dotenv from 'dotenv';
+// import * as dotenv from 'dotenv';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/modules/app.module';
 
-dotenv.config({ path: '.env.example', override: true });
+// dotenv.config({ path: '.env.example', override: true });
 
 describe('UserController & AuthController(e2e)', () => {
   let app: INestApplication<App>;
@@ -28,12 +28,13 @@ describe('UserController & AuthController(e2e)', () => {
     await app.close();
   });
 
-  it('POST /auth/login & users/register', async () => {
+  it('POST /auth/login & users/signup', async () => {
     await request(app.getHttpServer())
-      .post('/users/register')
+      .post('/users/signup')
       .send({
         username: 'Test User',
         email: 'test@example.com',
+        birthdate: '20/09/2022',
         password: 'testexemplo',
       })
       .expect(201);
