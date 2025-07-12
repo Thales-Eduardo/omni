@@ -11,7 +11,7 @@ import { AppModule } from './modules/app.module';
 function apm(): void {
   if (process.env.APM_AVAILABLE === 'false') return;
   elasticApm.start({
-    serviceName: 'shortener-url',
+    serviceName: 'omni',
     apiKey: process.env.API_KEY,
     serverUrl: process.env.SERVER_URL,
     logLevel: 'trace',
@@ -39,10 +39,10 @@ async function bootstrap() {
 
   //Swagger http://localhost:3333/swagger/api
   const config = new DocumentBuilder()
-    .setTitle('shortener-url')
+    .setTitle('omni')
     .setDescription('API description')
     .setVersion('1.0')
-    .addTag('shortener')
+    .addTag('omni')
     .addBearerAuth(
       {
         type: 'http',

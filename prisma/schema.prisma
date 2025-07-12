@@ -26,3 +26,24 @@ model User {
 
   @@map("users")
 }
+
+model Wallet {
+  id         String   @id @default(uuid())
+  user_id    String
+  amount     Decimal  @default(0.00) @db.Decimal(10, 2)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("wallet")
+}
+
+model Transactions {
+  id             String   @id @default(uuid())
+  wallet_id_from String
+  wallet_id_to   String
+  amount         Decimal  @db.Decimal(10, 2)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
+
+  @@map("transactions")
+}

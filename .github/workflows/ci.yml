@@ -1,4 +1,4 @@
-name: shortener-url-ci
+name: omni-ci
 on: [pull_request]
 
 env:
